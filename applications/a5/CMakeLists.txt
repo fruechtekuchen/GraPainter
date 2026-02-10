@@ -1,7 +1,7 @@
 # glob for source files
 file(GLOB SOURCES "*.cpp")
 
-set(TARGET bbm-a2)
+set(TARGET grapainter)
 
 # executable target
 add_executable(${TARGET} ${SOURCES})
