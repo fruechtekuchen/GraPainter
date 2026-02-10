@@ -129,6 +129,8 @@ int main(int argc, char** argv) {
 
 
     auto playercam = Camera("playercam");
+    playercam->pos = glm::vec3(-2,3,7);
+    playercam->dir = glm::vec3(0.27,-0.25,-0.93);
     make_camera_current(playercam);
 
     const glm::ivec2 res = Context::resolution();
@@ -159,7 +161,8 @@ int main(int argc, char** argv) {
         // render
         gbuffer->bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        //copy_tex_shader->bind();
+        copy_tex_shader->bind();
+        setup_geometry_shader(copy_tex_shader);
         the_player->draw(copy_tex_shader);
         copy_tex_shader->unbind();
         gbuffer->unbind();

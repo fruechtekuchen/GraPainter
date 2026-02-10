@@ -4,6 +4,17 @@
 using namespace std;
 using namespace cppgl;
 
+void setup_geometry_shader(cppgl::Shader &shader) {
+    auto cam = current_camera();
+    shader->uniform("cam.near", cam->near);
+    shader->uniform("cam.far",  cam->far);
+    shader->uniform("cam.pos",  cam->pos);
+    shader->uniform("cam.dir",  cam->dir);
+    shader->uniform("view", cam->view);
+    shader->uniform("view_normal", cam->view_normal);
+    shader->uniform("proj", cam->proj);
+}
+
 void setup_light(const Shader& shader) {
 	shader->uniform("ambient_col", glm::vec3(0.12f, 0.14f, 0.16f));
 	shader->uniform("light_dir", glm::normalize(glm::vec3(1.f, -0.6f, -0.4f)));
