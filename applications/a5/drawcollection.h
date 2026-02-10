@@ -13,13 +13,11 @@ public:
 
     std::string name;
     glm::mat4 model;
-    glm::vec3 mod_col = glm::vec3(1.f);
 
-    void draw_geometry(cppgl::Shader &shader, const glm::mat4 &model, const std::vector<std::pair<std::string, glm::vec3>> &tints = {});
+    void draw_geometry(cppgl::Shader &shader, const glm::mat4 &model);
+
     // Apply DrawCollection::model manually to shader if using this method.
-    void draw_geometry(cppgl::Shader &shader, const std::vector<std::pair<std::string, glm::vec3>> &tints = {});
-
-    void draw_geometry_instanced(cppgl::Shader &shader, const std::vector<glm::mat4> &instance_models, const std::vector<std::pair<std::string, glm::vec3>> &tints = {});
+    void draw_geometry(cppgl::Shader &shader);
 };
 
 using DrawCollection = cppgl::NamedHandle<DrawCollectionImpl>;

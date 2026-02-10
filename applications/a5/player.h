@@ -20,6 +20,6 @@ public:
 	Player();
 
 	void update();
-	void draw();
+	void draw(cppgl::Shader &shader);
 };
 
