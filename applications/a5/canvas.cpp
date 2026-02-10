@@ -4,8 +4,8 @@
 
 
 
-Canvas::Canvas(glm::vec3 _pos, glm::vec3 _extends, glm::ivec2 _dims) 
-: pos(_pos), extends(_extends), dims(_dims) {
+Canvas::Canvas(glm::vec3 _pos, glm::vec3 _extents, glm::ivec2 _dims) 
+: pos(_pos), extents(_extents), dims(_dims) {
     // create texture on gpu and fill it white
 }
 

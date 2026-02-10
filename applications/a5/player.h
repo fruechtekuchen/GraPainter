@@ -17,7 +17,7 @@ public:
 
 	float rotation;
 	
-	Player();
+	Player(glm::vec3 position);
 
 	void update();
 	void draw(cppgl::Shader &shader);
