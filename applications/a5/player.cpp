@@ -70,28 +70,12 @@ void Player::stop_moving_in_dir(int dir) {
 
 
 void Player::update(float dt) {
-    velocity += acceleration_input * config::player::deceleration * dt;
-    std::cout << "input: " << acceleration_input << "\n";
+    velocity += acceleration_input * config::player::acceleration * dt;
 
-    // damping
-    if(acceleration_input != glm::vec3(0)) {
-        // find orthogonal axis
-        glm::vec3 orthogonal_axis = glm::vec3(acceleration_input.z,0, -acceleration_input.x);
-        float curr_orthogonal_speed = glm::dot(orthogonal_axis, velocity);
-        /* float new_orthogonal_speed = curr_orthogonal_speed - config::player::deceleration*dt;
-        new_orthogonal_speed = std::max(new_orthogonal_speed, 0.f);
-        float delta_speed = curr_orthogonal_speed - new_orthogonal_speed; */
-        float delta_speed2 = std::min(curr_orthogonal_speed, config::player::deceleration*dt);
-        glm::vec3 deceleration = -delta_speed2 * orthogonal_axis;
-        velocity += deceleration;
-
-
-    } else {
-        float curr_speed = velocity.length();
-        float new_speed = curr_speed-config::player::deceleration*dt;
-        new_speed = std::max(new_speed, 0.f);
-        velocity *= new_speed / velocity.length();
-    }
+    float speed = velocity.length();
+    speed -= config::player::deceleration*dt;
+    speed = std::max(0.f, speed);
+    velocity *= speed/velocity.length();
 
     position += velocity * dt;
 }

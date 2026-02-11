@@ -3,6 +3,6 @@
 using namespace config;
 
 
-float player::max_speed = 20;
-float player::acceleration = 40;
-float player::deceleration = 0.1;
+float player::max_speed = 5;
+float player::acceleration = 100;
+float player::deceleration = 30;
