@@ -52,7 +52,7 @@ Canvas::~Canvas() {
 
 void Canvas::draw(cppgl::Shader &shader) {
     glm::mat4 model = glm::scale(glm::mat4(1.f), scale);
-    model = glm::translate(glm:mat4(1.f), pos);
+    model = glm::translate(glm::mat4(1.f), pos) * model;
     shader->uniform("model", model);
     shader->uniform("model_normal", transpose(inverse(model)));
     

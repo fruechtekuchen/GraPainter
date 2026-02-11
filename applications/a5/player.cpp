@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/vector_angle.hpp>
 #include "config.h"
+#include "util.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -12,6 +13,15 @@ using namespace cppgl;
 
 Player::Player(glm::vec3 _position) : position(_position) {
     prototype = DrawCollection::findOrCreate("render-data/Fratz.obj", "render-data/Fratz.obj");
+    util::print_mesh_info(prototype);
+    for(auto &prot : prototype->prototype) {
+            for(auto pair : prot->mesh->material->texture_map) {
+                auto name = pair.first;
+                auto tex = pair.second;
+                glTextureParameteri(tex->id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+                glTextureParameteri(tex->id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            }
+        }
 }
 
 void Player::recalculate_acceleration_input() {
@@ -73,18 +83,24 @@ void Player::stop_moving_in_dir(int dir) {
 void Player::update(float dt) {
     velocity += acceleration_input * config::player::acceleration * dt;
 
-    float speed = velocity.length();
-    speed -= config::player::deceleration*dt;
-    speed = std::max(0.f, speed);
-    velocity *= speed/velocity.length();
+    float speed = glm::length(velocity);
+    // slowing down
+    if(speed > 0 ) {
+        speed -= config::player::deceleration*dt;
+        speed = std::max(0.f, speed);
+        
+        // we are not on the autobahn, obey to speed limits
+        speed = std::min(speed, config::player::max_speed);
+        velocity *= speed/glm::length(velocity);
+    }
 
     position += velocity * dt;
-
+    std::cout << speed << "\n";
     // adjust rotation
-    if(velocity != glm::vec3(0)) {
+    if(speed > 0.1) {
         rotation = glm::orientedAngle(glm::normalize(glm::vec2(velocity.x, velocity.z)), glm::vec2(0,1));
-        std::cout << "rotation: " << rotation << "\n";
     }
+    
 }
 
 void Player::draw(cppgl::Shader &shader) {
