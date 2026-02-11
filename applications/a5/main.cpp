@@ -33,7 +33,19 @@ void keyboard_callback(int key, int scancode, int action, int mods) {
         wireframe = !wireframe;
         glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
     }
-    if (current_camera()->name != "playercam") return;
+    if (key == GLFW_KEY_W && action == GLFW_PRESS) the_player->start_moving_in_dir(0);
+    if (key == GLFW_KEY_W && action == GLFW_RELEASE) the_player->stop_moving_in_dir(0);
+    if (key == GLFW_KEY_D && action == GLFW_PRESS) the_player->start_moving_in_dir(1);
+    if (key == GLFW_KEY_D && action == GLFW_RELEASE) the_player->stop_moving_in_dir(1);
+    if (key == GLFW_KEY_S && action == GLFW_PRESS) the_player->start_moving_in_dir(2);
+    if (key == GLFW_KEY_S && action == GLFW_RELEASE) the_player->stop_moving_in_dir(2);
+    if (key == GLFW_KEY_A && action == GLFW_PRESS) the_player->start_moving_in_dir(3);
+    if (key == GLFW_KEY_A && action == GLFW_RELEASE) the_player->stop_moving_in_dir(3);
+
+    if (key == GLFW_KEY_E && action == GLFW_PRESS) the_player->start_rotating_in_dir(1);
+    if (key == GLFW_KEY_E && action == GLFW_RELEASE) the_player->stop_rotating_in_dir(1);
+    if (key == GLFW_KEY_Q && action == GLFW_PRESS) the_player->start_rotating_in_dir(-1);
+    if (key == GLFW_KEY_Q && action == GLFW_RELEASE) the_player->stop_rotating_in_dir(-1);
 }
 
 void resize_callback(int w, int h) {
@@ -129,8 +141,8 @@ int main(int argc, char** argv) {
 
 
     auto playercam = Camera("playercam");
-    playercam->pos = glm::vec3(-2,3,7);
-    playercam->dir = glm::vec3(0.27,-0.25,-0.93);
+    playercam->pos = glm::vec3(0,3,7);
+    playercam->dir = glm::vec3(0,-0.25,-0.93);
     make_camera_current(playercam);
 
     const glm::ivec2 res = Context::resolution();
@@ -156,7 +168,8 @@ int main(int argc, char** argv) {
         if (counter++ % 100 == 0) reload_modified_shaders();
 
         // update
-        the_player->update();
+        double dt = cppgl::Context::instance().frame_time()/1000;
+        the_player->update(dt);
 
         // render
         gbuffer->bind();
