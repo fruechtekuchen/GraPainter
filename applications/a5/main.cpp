@@ -41,11 +41,6 @@ void keyboard_callback(int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_S && action == GLFW_RELEASE) the_player->stop_moving_in_dir(2);
     if (key == GLFW_KEY_A && action == GLFW_PRESS) the_player->start_moving_in_dir(3);
     if (key == GLFW_KEY_A && action == GLFW_RELEASE) the_player->stop_moving_in_dir(3);
-
-    if (key == GLFW_KEY_E && action == GLFW_PRESS) the_player->start_rotating_in_dir(1);
-    if (key == GLFW_KEY_E && action == GLFW_RELEASE) the_player->stop_rotating_in_dir(1);
-    if (key == GLFW_KEY_Q && action == GLFW_PRESS) the_player->start_rotating_in_dir(-1);
-    if (key == GLFW_KEY_Q && action == GLFW_RELEASE) the_player->stop_rotating_in_dir(-1);
 }
 
 void resize_callback(int w, int h) {
@@ -177,6 +172,7 @@ int main(int argc, char** argv) {
         copy_tex_shader->bind();
         setup_geometry_shader(copy_tex_shader);
         the_player->draw(copy_tex_shader);
+        the_canvas->draw(copy_tex_shader);
         copy_tex_shader->unbind();
         gbuffer->unbind();
 

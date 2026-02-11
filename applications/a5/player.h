@@ -11,14 +11,13 @@ void init_prototypes();
 class Player {
 private:
 	DrawCollection prototype;
+	// always either zero or normalized
 	glm::vec3 acceleration_input=glm::vec3(0);
-	int rotation_input=0;
 public:
 	glm::vec3 position=glm::vec3(0);
 	glm::vec3 velocity=glm::vec3(0);
 
 	float rotation=0;
-	float rotation_vel=0;
 	
 	Player(glm::vec3 position);
 	void start_moving_in_dir(int dir);
