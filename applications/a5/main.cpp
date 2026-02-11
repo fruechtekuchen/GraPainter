@@ -151,7 +151,7 @@ int main(int argc, char** argv) {
     copy_tex_shader = cppgl::Shader("copy_tex_shader", "shader/pos+norm+tc.vs", "shader/pos+norm+tc.fs");
 
     the_player = std::make_shared<Player>(glm::vec3(0));
-    the_canvas = std::make_shared<Canvas>(glm::vec3(0), glm::vec3(10, 10, 0), glm::ivec2(100,100));
+    the_canvas = std::make_shared<Canvas>(glm::vec3(0));
 
     while (Context::running() && game_is_running) {
         // input handling
