@@ -13,47 +13,59 @@ Player::Player(glm::vec3 _position) : position(_position) {
     prototype = DrawCollection::findOrCreate("render-data/Fratz.obj", "render-data/Fratz.obj");
 }
 
-void Player::start_moving_in_dir(int dir) {
-    switch(dir) {
-        case 0:
-            acceleration_input.z = -1; break;
-        case 1:
-            acceleration_input.x = 1; break;
-        case 2:
-            acceleration_input.z = 1; break;
-        case 3:
-            acceleration_input.x = -1; break;
+void Player::recalculate_acceleration_input() {
+    acceleration_input = glm::vec3(0);
+
+    if(is_moving_forward) {
+        acceleration_input.z -= 1;
+    }
+    if(is_moving_right) {
+        acceleration_input.x += 1;
+    }
+    if(is_moving_backward) {
+        acceleration_input.z += 1;
+    }
+    if(is_moving_left) {
+        acceleration_input.x -= 1;
     }
     if(acceleration_input != glm::vec3(0)) {
         acceleration_input = glm::normalize(acceleration_input);
     }
 }
-void Player::stop_moving_in_dir(int dir) {
+
+void Player::start_moving_in_dir(int dir) {
     switch(dir) {
         case 0:
-            if(acceleration_input.z < 0) {
-                acceleration_input.z = 0;
-                break;
-            }
+            is_moving_forward = true;
+            break;
         case 1:
-            if(acceleration_input.x > 0) {
-                acceleration_input.x = 0;
-                break;
-            }
+            is_moving_right = true;
+            break;
         case 2:
-            if(acceleration_input.z > 0) {
-                acceleration_input.z = 0;
-                break;
-            }
+            is_moving_backward = true;
+            break;
         case 3:
-            if(acceleration_input.x < 0) {
-                acceleration_input.x = 0;
-                break;
-            }
+            is_moving_left = true;
+            break;
     }
-    if(acceleration_input != glm::vec3(0)) {
-        acceleration_input = glm::normalize(acceleration_input);
+    recalculate_acceleration_input();
+}
+void Player::stop_moving_in_dir(int dir) {
+    switch(dir) {
+    case 0:
+        is_moving_forward = false;
+        break;
+    case 1:
+        is_moving_right = false;
+        break;
+    case 2:
+        is_moving_backward = false;
+        break;
+    case 3:
+        is_moving_left = false;
+        break;
     }
+    recalculate_acceleration_input();    
 }
 
 

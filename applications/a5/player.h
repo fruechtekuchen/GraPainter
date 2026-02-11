@@ -9,10 +9,7 @@
 void init_prototypes();
 
 class Player {
-private:
-	DrawCollection prototype;
-	// always either zero or normalized
-	glm::vec3 acceleration_input=glm::vec3(0);
+
 public:
 	glm::vec3 position=glm::vec3(0);
 	glm::vec3 velocity=glm::vec3(0);
@@ -27,5 +24,15 @@ public:
 
 	void update(float dt);
 	void draw(cppgl::Shader &shader);
+
+private:
+	DrawCollection prototype;
+	int is_moving_forward=false;
+	int is_moving_right=false;
+	int is_moving_backward=false;
+	int is_moving_left=false;
+	// always either zero or normalized
+	glm::vec3 acceleration_input=glm::vec3(0);
+	void recalculate_acceleration_input();
 };
 
