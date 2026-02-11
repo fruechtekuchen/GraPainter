@@ -1,6 +1,7 @@
 #include "player.h"
 #include <cppgl.h>
 #include <glm/glm.hpp>
+#include <glm/gtx/vector_angle.hpp>
 #include "config.h"
 
 #include <cstdlib>
@@ -78,6 +79,12 @@ void Player::update(float dt) {
     velocity *= speed/velocity.length();
 
     position += velocity * dt;
+
+    // adjust rotation
+    if(velocity != glm::vec3(0)) {
+        rotation = glm::orientedAngle(glm::normalize(glm::vec2(velocity.x, velocity.z)), glm::vec2(0,1));
+        std::cout << "rotation: " << rotation << "\n";
+    }
 }
 
 void Player::draw(cppgl::Shader &shader) {
