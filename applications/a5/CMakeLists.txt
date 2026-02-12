@@ -1,7 +1,7 @@
 # glob for source files
-file(GLOB SOURCES "*.cpp")
+file(GLOB_RECURSE SOURCES "*.cpp")
 
-set(TARGET grapainter)
+set(TARGET grapainter_game)
 
 # executable target
 add_executable(${TARGET} ${SOURCES})

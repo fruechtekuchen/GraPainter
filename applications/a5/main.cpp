@@ -4,9 +4,7 @@
 #include <fstream>
 #include "particles.h"
 #include "rendering.h"
-#include "player.h"
-#include "playercam.h"
-#include "canvas.h"
+#include "grapainter/game.h"
 #undef far
 #undef near
 
@@ -17,9 +15,7 @@ using namespace cppgl;
 bool game_is_running = true;
 bool is_drawing = false;
 glm::vec3 drawing_color{0,1,1};
-std::shared_ptr<Player> the_player;
-std::shared_ptr<Playercam> the_camera;
-std::shared_ptr<Canvas> the_canvas;
+std::unique_ptr<Grapainter> the_game;
 
 cppgl::Shader copy_tex_shader;
 
@@ -37,21 +33,7 @@ void keyboard_callback(int key, int scancode, int action, int mods) {
         wireframe = !wireframe;
         glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
     }
-    if (key == GLFW_KEY_W && action == GLFW_PRESS) the_player->start_moving_in_dir(0);
-    if (key == GLFW_KEY_W && action == GLFW_RELEASE) the_player->stop_moving_in_dir(0);
-    if (key == GLFW_KEY_D && action == GLFW_PRESS) the_player->start_moving_in_dir(1);
-    if (key == GLFW_KEY_D && action == GLFW_RELEASE) the_player->stop_moving_in_dir(1);
-    if (key == GLFW_KEY_S && action == GLFW_PRESS) the_player->start_moving_in_dir(2);
-    if (key == GLFW_KEY_S && action == GLFW_RELEASE) the_player->stop_moving_in_dir(2);
-    if (key == GLFW_KEY_A && action == GLFW_PRESS) the_player->start_moving_in_dir(3);
-    if (key == GLFW_KEY_A && action == GLFW_RELEASE) the_player->stop_moving_in_dir(3);
-
-    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) is_drawing = true;
-    if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE) is_drawing = false;
-
-    if (key == GLFW_KEY_1 && action == GLFW_PRESS) drawing_color.x = drawing_color.x == 0 ? 1 : 0;
-    if (key == GLFW_KEY_2 && action == GLFW_PRESS) drawing_color.y = drawing_color.y == 0 ? 1 : 0;
-    if (key == GLFW_KEY_3 && action == GLFW_PRESS) drawing_color.z = drawing_color.z == 0 ? 1 : 0;
+    the_game->keyboard_callback(key, scancode, action, mods);
     
 }
 
@@ -137,9 +119,7 @@ int main(int argc, char** argv) {
 
     copy_tex_shader = cppgl::Shader("copy_tex_shader", "shader/pos+norm+tc.vs", "shader/pos+norm+tc.fs");
 
-    the_player = std::make_shared<Player>(glm::vec3(0));
-    the_camera = std::make_shared<Playercam>(10.f, glm::vec3(0,-0.5,-0.70), the_player);
-    the_canvas = std::make_shared<Canvas>(glm::vec3(-5,0,-5));
+    the_game = std::make_unique<Grapainter>();
 
     while (Context::running() && game_is_running) {
         // input handling
@@ -151,20 +131,14 @@ int main(int argc, char** argv) {
         if (counter++ % 100 == 0) reload_modified_shaders();
 
         // update
-        double dt = cppgl::Context::instance().frame_time()/1000;
-        the_player->update(dt);
-        the_camera->update(dt);
-        if(is_drawing) {
-            the_canvas->try_paint(the_player->position, drawing_color);
-        }
+        the_game->update();
 
         // render
         gbuffer->bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         copy_tex_shader->bind();
         setup_geometry_shader(copy_tex_shader);
-        the_player->draw(copy_tex_shader);
-        the_canvas->draw(copy_tex_shader);
+        the_game->draw(copy_tex_shader);
         copy_tex_shader->unbind();
         gbuffer->unbind();
 
