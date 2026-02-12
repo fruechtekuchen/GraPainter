@@ -14,6 +14,8 @@ using namespace cppgl;
 
 // globals
 bool game_is_running = true;
+bool is_drawing = false;
+glm::vec3 drawing_color{0,1,1};
 std::shared_ptr<Player> the_player;
 std::shared_ptr<Canvas> the_canvas;
 
@@ -41,30 +43,18 @@ void keyboard_callback(int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_S && action == GLFW_RELEASE) the_player->stop_moving_in_dir(2);
     if (key == GLFW_KEY_A && action == GLFW_PRESS) the_player->start_moving_in_dir(3);
     if (key == GLFW_KEY_A && action == GLFW_RELEASE) the_player->stop_moving_in_dir(3);
+
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) is_drawing = true;
+    if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE) is_drawing = false;
+
+    if (key == GLFW_KEY_1 && action == GLFW_PRESS) drawing_color.x = drawing_color.x == 0 ? 1 : 0;
+    if (key == GLFW_KEY_2 && action == GLFW_PRESS) drawing_color.y = drawing_color.y == 0 ? 1 : 0;
+    if (key == GLFW_KEY_3 && action == GLFW_PRESS) drawing_color.z = drawing_color.z == 0 ? 1 : 0;
+    
 }
 
 void resize_callback(int w, int h) {
     if (gbuffer) gbuffer->resize(w, h);
-}
-
-void draw_fog_imgui(bool & draw_fog) {
-    if (Context::instance().show_gui) {
-        if (ImGui::BeginMainMenuBar()) {
-            ImGui::Checkbox("Show Fog", &draw_fog);
-            ImGui::Separator();
-            ImGui::EndMainMenuBar();
-        }
-    }
-}
-
-void draw_comic_imgui(bool & draw_comic) {
-    if (Context::instance().show_gui) {
-        if (ImGui::BeginMainMenuBar()) {
-            ImGui::Checkbox("Comic Style", &draw_comic);
-            ImGui::Separator();
-            ImGui::EndMainMenuBar();
-        }
-    }
 }
 
 void draw_imgui_demo(){
@@ -151,7 +141,7 @@ int main(int argc, char** argv) {
     copy_tex_shader = cppgl::Shader("copy_tex_shader", "shader/pos+norm+tc.vs", "shader/pos+norm+tc.fs");
 
     the_player = std::make_shared<Player>(glm::vec3(0));
-    the_canvas = std::make_shared<Canvas>(glm::vec3(0));
+    the_canvas = std::make_shared<Canvas>(glm::vec3(-5,0,-5));
 
     while (Context::running() && game_is_running) {
         // input handling
@@ -165,6 +155,9 @@ int main(int argc, char** argv) {
         // update
         double dt = cppgl::Context::instance().frame_time()/1000;
         the_player->update(dt);
+        if(is_drawing) {
+            the_canvas->try_paint(the_player->position, drawing_color);
+        }
 
         // render
         gbuffer->bind();

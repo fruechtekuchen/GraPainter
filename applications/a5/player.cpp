@@ -95,7 +95,6 @@ void Player::update(float dt) {
     }
 
     position += velocity * dt;
-    std::cout << speed << "\n";
     // adjust rotation
     if(speed > 0.1) {
         rotation = glm::orientedAngle(glm::normalize(glm::vec2(velocity.x, velocity.z)), glm::vec2(0,1));
