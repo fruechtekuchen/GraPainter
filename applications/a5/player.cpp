@@ -12,7 +12,7 @@ using namespace cppgl;
 
 
 Player::Player(glm::vec3 _position) : position(_position) {
-    prototype = DrawCollection::findOrCreate("render-data/Fratz.obj", "render-data/Fratz.obj");
+    prototype = DrawCollection::findOrCreate("render-data/fratz/Fratz.obj", "render-data/fratz/Fratz.obj");
     util::print_mesh_info(prototype);
     for(auto &prot : prototype->prototype) {
             for(auto pair : prot->mesh->material->texture_map) {

@@ -5,6 +5,7 @@
 #include "particles.h"
 #include "rendering.h"
 #include "player.h"
+#include "playercam.h"
 #include "canvas.h"
 #undef far
 #undef near
@@ -17,6 +18,7 @@ bool game_is_running = true;
 bool is_drawing = false;
 glm::vec3 drawing_color{0,1,1};
 std::shared_ptr<Player> the_player;
+std::shared_ptr<Playercam> the_camera;
 std::shared_ptr<Canvas> the_canvas;
 
 cppgl::Shader copy_tex_shader;
@@ -125,11 +127,6 @@ int main(int argc, char** argv) {
     std::filesystem::current_path(EXECUTABLE_DIR);
 
 
-    auto playercam = Camera("playercam");
-    playercam->pos = glm::vec3(0,3,7);
-    playercam->dir = glm::vec3(0,-0.25,-0.93);
-    make_camera_current(playercam);
-
     const glm::ivec2 res = Context::resolution();
     gbuffer = Framebuffer("gbuffer", res.x, res.y);
     gbuffer->attach_depthbuffer(Texture2D("gbuf_depth", res.x, res.y, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT));
@@ -141,11 +138,12 @@ int main(int argc, char** argv) {
     copy_tex_shader = cppgl::Shader("copy_tex_shader", "shader/pos+norm+tc.vs", "shader/pos+norm+tc.fs");
 
     the_player = std::make_shared<Player>(glm::vec3(0));
+    the_camera = std::make_shared<Playercam>(10.f, glm::vec3(0,-0.5,-0.70), the_player);
     the_canvas = std::make_shared<Canvas>(glm::vec3(-5,0,-5));
 
     while (Context::running() && game_is_running) {
         // input handling
-        if (current_camera()->name != "playercam")
+        if (current_camera()->name == "default")
             CameraImpl::default_input_handler(Context::frame_time());
 
         current_camera()->update();
@@ -155,6 +153,7 @@ int main(int argc, char** argv) {
         // update
         double dt = cppgl::Context::instance().frame_time()/1000;
         the_player->update(dt);
+        the_camera->update(dt);
         if(is_drawing) {
             the_canvas->try_paint(the_player->position, drawing_color);
         }
