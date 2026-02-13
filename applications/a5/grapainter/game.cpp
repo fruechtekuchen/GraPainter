@@ -4,6 +4,7 @@ Grapainter::Grapainter() {
     m_the_player = std::make_shared<Player>(glm::vec3(0));
     m_the_camera = std::make_shared<Playercam>(10.f, glm::vec3(0,-0.5,-0.70), m_the_player);
     m_the_canvas = std::make_shared<Canvas>(glm::vec3(-5,0,-5));
+    m_the_image = std::make_shared<Imageframe>("render-data/images/kirby_pixel.png", glm::vec3(0,1.5,-8), glm::vec2(3,3), 1);
 }
 void Grapainter::keyboard_callback(int key, int scancode, int action, int mods)  {
 if (key == GLFW_KEY_W && action == GLFW_PRESS) m_the_player->start_moving_in_dir(0);
@@ -35,4 +36,5 @@ void Grapainter::update()  {
 void Grapainter::draw(cppgl::Shader &shader)  {
     m_the_player->draw(shader);
     m_the_canvas->draw(shader);
+    m_the_image->draw(shader);
 }

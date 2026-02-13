@@ -13,8 +13,6 @@ using namespace cppgl;
 
 // globals
 bool game_is_running = true;
-bool is_drawing = false;
-glm::vec3 drawing_color{0,1,1};
 std::unique_ptr<Grapainter> the_game;
 
 cppgl::Shader copy_tex_shader;

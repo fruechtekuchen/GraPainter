@@ -9,10 +9,11 @@ private:
     glm::vec3 m_position;
     glm::vec2 m_scale;
     cppgl::Texture2D m_texture;
+    float m_pitch;
 
 public:
-    Imageframe(glm::vec3 pos, glm::vec2 scale={1,1}, std::string filename) 
-    :m_position(pos), m_scale(scale) {
+    Imageframe(std::string filename, glm::vec3 pos, glm::vec2 scale={1,1}, float pitch=0) 
+    :m_position(pos), m_scale(scale), m_pitch(pitch) {
 
         m_texture = cppgl::Texture2D("grapainter_imageframe_tex", filename);
 
@@ -22,7 +23,7 @@ public:
         glTextureParameteri(m_texture->id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         // setup mesh
-        glm::vec3 vertices[4] = { {0,0,0}, {0,0,1}, {1,0,1}, {1,0,0} };
+        glm::vec3 vertices[4] = { {-0.5,0,-0.5}, {-0.5,0,0.5}, {0.5,0,0.5}, {0.5,0,-0.5} };
         glm::vec3 normals[4] = { {0,1,0}, {0,1,0}, {0,1,0}, {0,1,0} };
         glm::vec2 texcoords[4] = { {0, 0}, {0, 1}, {1, 1}, {1, 0} };
         unsigned int indices[6] = { 0, 1, 2, 0, 2, 3 };
@@ -39,11 +40,12 @@ public:
         
         // setup drawing shader
         auto shader = cppgl::Shader::findOrCreate("grapainter_imageframe_shader", "shader/pos+norm+tc.vs", "shader/pos+norm+tc.fs");
-        m_prototype = cppgl::Drawelement("canvas", shader, mesh);
+        m_prototype = cppgl::Drawelement("imageframe", shader, mesh);
     }
 
     void draw(cppgl::Shader &shader) {
         glm::mat4 model = glm::scale(glm::mat4(1.f), glm::vec3(m_scale.x,1,m_scale.y));
+        model = glm::rotate(glm::mat4(1), m_pitch, glm::vec3(1,0,0)) * model;
         model = glm::translate(glm::mat4(1.f), m_position) * model;
         shader->uniform("model", model);
         shader->uniform("model_normal", transpose(inverse(model)));

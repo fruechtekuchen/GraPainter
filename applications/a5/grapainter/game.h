@@ -3,6 +3,7 @@
 #include "player.h"
 #include "playercam.h"
 #include "canvas.h"
+#include "imageframe.h"
 #include <memory>
 
 class Grapainter {
@@ -18,4 +19,5 @@ private:
     std::shared_ptr<Player> m_the_player;
     std::shared_ptr<Playercam> m_the_camera;
     std::shared_ptr<Canvas> m_the_canvas;
+    std::shared_ptr<Imageframe> m_the_image;
 };
