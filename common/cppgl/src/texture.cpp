@@ -10,7 +10,7 @@ CPPGL_NAMESPACE_BEGIN
 
 Texture2DImpl::Texture2DImpl(const std::string& name, const fs::path& path, bool mipmap) : name(name), loaded_from_path(path), id(0) {
     // load image from disk
-    auto [data, w_out, h_out, channels, is_hdr] = image_load(path, true);
+    auto [data, w_out, h_out, channels, is_hdr] = image_load(path, false);
     this->w = w_out;
     this->h = h_out;
 
