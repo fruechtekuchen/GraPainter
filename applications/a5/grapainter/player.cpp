@@ -22,6 +22,7 @@ Player::Player(glm::vec3 _position) : position(_position) {
                 glTextureParameteri(tex->id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             }
         }
+    current_max_velocity = config::player::max_speed;
 }
 
 void Player::recalculate_acceleration_input() {
@@ -79,6 +80,11 @@ void Player::stop_moving_in_dir(int dir) {
     recalculate_acceleration_input();    
 }
 
+void Player::set_sprinting(bool value) {
+    if(value) current_max_velocity = config::player::sprinting_multiplier * config::player::max_speed;
+    else current_max_velocity = config::player::max_speed;
+}
+
 
 void Player::update(float dt) {
     velocity += acceleration_input * config::player::acceleration * dt;
@@ -90,7 +96,7 @@ void Player::update(float dt) {
         speed = std::max(0.f, speed);
         
         // we are not on the autobahn, obey to speed limits
-        speed = std::min(speed, config::player::max_speed);
+        speed = std::min(speed, current_max_velocity);
         velocity *= speed/glm::length(velocity);
     }
 

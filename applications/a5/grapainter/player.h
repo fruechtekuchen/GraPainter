@@ -20,6 +20,7 @@ public:
 	void stop_moving_in_dir(int dir);
 	void start_rotating_in_dir(int dir);
 	void stop_rotating_in_dir(int dir);
+	void set_sprinting(bool value);
 
 	void update(float dt);
 	void draw(cppgl::Shader &shader);
@@ -30,6 +31,7 @@ private:
 	int is_moving_right=false;
 	int is_moving_backward=false;
 	int is_moving_left=false;
+	float current_max_velocity;
 	// always either zero or normalized
 	glm::vec3 acceleration_input=glm::vec3(0);
 	void recalculate_acceleration_input();

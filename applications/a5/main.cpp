@@ -35,6 +35,10 @@ void keyboard_callback(int key, int scancode, int action, int mods) {
     
 }
 
+void mouse_button_callback(int button, int action, int mods) {
+    the_game->mouse_button_callback(button, action, mods);
+}
+
 void resize_callback(int w, int h) {
     if (gbuffer) gbuffer->resize(w, h);
 }
@@ -101,6 +105,7 @@ int main(int argc, char** argv) {
     params.font_size_pixels = 15;
     Context::init(params);
     Context::set_keyboard_callback(keyboard_callback);
+    Context::set_mouse_button_callback(mouse_button_callback);
     Context::set_resize_callback(resize_callback);
 
     // EXECUTABLE_DIR set via cmake, paths now relative to source/executable directory

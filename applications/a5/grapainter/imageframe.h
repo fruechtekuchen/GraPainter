@@ -19,11 +19,9 @@ public:
 
         glTextureParameteri(m_texture->id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTextureParameteri(m_texture->id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTextureParameteri(m_texture->id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTextureParameteri(m_texture->id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         // setup mesh
-        glm::vec3 vertices[4] = { {-0.5,0,-0.5}, {-0.5,0,0.5}, {0.5,0,0.5}, {0.5,0,-0.5} };
+        glm::vec3 vertices[4] = { {-0.5,0,-1}, {-0.5,0,0}, {0.5,0,0}, {0.5,0,-1} };
         glm::vec3 normals[4] = { {0,1,0}, {0,1,0}, {0,1,0}, {0,1,0} };
         glm::vec2 texcoords[4] = { {0, 0}, {0, 1}, {1, 1}, {1, 0} };
         unsigned int indices[6] = { 0, 1, 2, 0, 2, 3 };
@@ -54,5 +52,9 @@ public:
         mesh->bind(shader);
         mesh->draw();
         mesh->unbind();
+    }
+    
+    cppgl::Texture2D get_texture() {
+        return m_texture;
     }
 };

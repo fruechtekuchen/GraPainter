@@ -10,6 +10,8 @@ class Grapainter {
 public:
     Grapainter();
     void keyboard_callback(int key, int scancode, int action, int mods);
+    void mouse_button_callback(int button, int action, int mods);
+
     void update();
     void draw(cppgl::Shader &shader);
 
@@ -20,4 +22,9 @@ private:
     std::shared_ptr<Playercam> m_the_camera;
     std::shared_ptr<Canvas> m_the_canvas;
     std::shared_ptr<Imageframe> m_the_image;
+
+    const double time_to_draw = 60.;
+    double game_duration = 0.;
+    bool game_ended = false;
+
 };

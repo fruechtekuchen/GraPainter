@@ -17,9 +17,6 @@ void main() {
     float dist = distance(position, brush_center);
     if(dist < brush_size) {
         float dist = distance(position, brush_center);
-        float alpha = (1 - dist/brush_size)*delta_time*20;
-        vec3 old_color = imageLoad(canvas_texture, position).xyz;
-        vec3 new_color = alpha*paint_color + (1-alpha)*old_color;
-        imageStore(canvas_texture, position, vec4(new_color, 1));
+        imageStore(canvas_texture, position, vec4(paint_color, 1));
     }
 }
